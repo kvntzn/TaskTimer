@@ -1,0 +1,33 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.heathkev.tasktimer.MainActivity">
+    <item
+        android:id="@+id/menumain_addTask"
+        android:icon="@android:drawable/ic_menu_add"
+        android:orderInCategory="10"
+        android:title="@string/menuTItle_addTask"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menumain_showDurations"
+        android:icon="@android:drawable/ic_menu_view"
+        android:title="@string/menuTitle_showDurations"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menumain_settings"
+        android:orderInCategory="30"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menumain_showAbout"
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:orderInCategory="40"
+        android:title="@string/menuTitle_showAbout"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menumain_generate"
+        android:orderInCategory="50"
+        android:title="@string/menuTitle_generate"
+        android:visible="false"
+        app:showAsAction="never" />
+</menu>
