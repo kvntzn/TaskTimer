@@ -10,8 +10,6 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="menuTItle_addTask">Add Task</string>
     <string name="menuTitle_showDurations">Durations Report</string>
     <string name="menuTitle_settings">Settings</string>
@@ -24,4 +22,6 @@
     <string name="addedit_description_hint">Task description (optional)</string>
     <string name="addedit_sort_hint">Order : sorts low to high</string>
     <string name="addedit_save_text">Save</string>
+    <string name="instructions_heading">Instructions</string>1`
+    <string name="instructions">Use the add button (+) in the toolbar above to create new tasks.\n\nTasks with lower sort orders will be placed higher up the list.Tasks with the same sort order will be sorted alphabetically.\n\nTapping a task will start the timer for that task (and will stop the timer for any previous task that was being timed).\n\nEach task has Edit and Delete buttons if you want to change the details or remove the task.</string>
 </resources>

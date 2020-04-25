@@ -1,5 +1,7 @@
 package com.heathkev.tasktimer
 
+import android.annotation.SuppressLint
+import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
@@ -43,6 +45,65 @@ class AddEditFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_add_edit, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.d(TAG, "onViewCreated: called")
+        if(savedInstanceState == null) {
+            if (task != null) {
+                val task = task!!
+                Log.d(TAG, "onViewCreated: Task details found, editing task ${task.id}")
+                addedit_name.setText(task.name)
+                addedit_description.setText(task.description)
+                addedit_sort_order.setText(task.sortOrder.toString())
+            } else {
+                //No task, so we must be adding a new task, and NOT editing and existing one
+                Log.d(TAG, "onViewCreated: No arguments, adding new record")
+            }
+        }
+    }
+
+    private fun saveTask(){
+        // Update the database if at least one field has changed
+        // - There's no need to hit the database unless this happened
+        val sortOrder = if (addedit_sort_order.text.isNotEmpty()){
+            Integer.parseInt(addedit_sort_order.text.toString())
+        }else{
+            0
+        }
+
+        val values = ContentValues()
+        val task = task
+
+        if(task != null){
+            Log.d(TAG,"saveTask: updating existing task")
+            if(addedit_name.text.toString() != task.name){
+                values.put(TasksContract.Columns.TASK_NAME, addedit_name.text.toString())
+            }
+            if(addedit_description.text.toString() != task.description){
+                values.put(TasksContract.Columns.TASK_DESCRIPTION,
+                    addedit_description.text.toString())
+            }
+            if(sortOrder != task.sortOrder){
+                values.put(TasksContract.Columns.TASK_SORT_ORDER, sortOrder)
+            }
+            if(values.size() != 0){
+                Log.d(TAG, "saveTask: Updating task")
+                activity?.contentResolver?.update(TasksContract.buildUriFromId(task.id),
+                    values, null, null)
+            }
+        }else{
+            Log.d(TAG,"saveTask: adding new task")
+            if(addedit_name.text.isNotEmpty()){
+                values.put(TasksContract.Columns.TASK_NAME, addedit_name.text.toString())
+                if(addedit_description.text.isNotEmpty()){
+                    values.put(TasksContract.Columns.TASK_DESCRIPTION,
+                        addedit_description.text.toString())
+                }
+                values.put(TasksContract.Columns.TASK_SORT_ORDER, sortOrder) //default zero if empty
+                activity?.contentResolver?.insert(TasksContract.CONTENT_URI, values)
+            }
+        }
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         Log.d(TAG, "onActivityCreated: starts")
         super.onActivityCreated(savedInstanceState)
@@ -53,6 +114,7 @@ class AddEditFragment : Fragment() {
         }
 
         addedit_save.setOnClickListener {
+            saveTask()
             listener?.onSaveClicked()
         }
     }
@@ -63,7 +125,7 @@ class AddEditFragment : Fragment() {
         if(context is OnSaveClicked){
             listener = context
         }else{
-            throw RuntimeException(context.toString() + "must implement OnSaveClicked")
+            throw RuntimeException("${context} must implement OnSaveClicked")
         }
     }
 

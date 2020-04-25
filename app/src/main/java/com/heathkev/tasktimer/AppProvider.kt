@@ -34,7 +34,7 @@ class AppProvider: ContentProvider() {
         val matcher = UriMatcher(UriMatcher.NO_MATCH)
 
         // e.g. content://com.heathkev.tasktimer.provider/Tasks
-        matcher.addURI(CONTENT_AUTHORITY, TasksContract.TABLE_NAME, TASKS);
+        matcher.addURI(CONTENT_AUTHORITY, TasksContract.TABLE_NAME, TASKS)
 
         // e.g. content://com.heathkev.tasktimer.provider/Tasks/8
         matcher.addURI(CONTENT_AUTHORITY, "${TasksContract.TABLE_NAME}/#", TASKS_ID)
@@ -110,7 +110,7 @@ class AppProvider: ContentProvider() {
             else -> throw IllegalArgumentException("Unknown URI: $uri")
         }
 
-        val db = AppDatabase.getInstance(context!!).readableDatabase
+        val db = context?.let { AppDatabase.getInstance(it).readableDatabase }
         val cursor = queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder)
         Log.d(TAG, "query: rows in returned cursor = ${cursor.count}") // TODO remove this line
 
@@ -147,6 +147,12 @@ class AppProvider: ContentProvider() {
             }
 
             else -> throw IllegalArgumentException("Unknown uri: $uri")
+        }
+
+        if(recordId > 0){
+            // something was inserted
+            Log.d(TAG,"insert: Setting notifyChange with $uri")
+            context?.contentResolver?.notifyChange(uri, null)
         }
 
         Log.d(TAG,"Exiting insert, returning $returnUri")
@@ -199,6 +205,12 @@ class AppProvider: ContentProvider() {
             else -> throw IllegalArgumentException("Unknown uri: ${uri}")
         }
 
+        if(count > 0){
+            // something was inserted
+            Log.d(TAG,"update: Setting notifyChange with $uri")
+            context?.contentResolver?.notifyChange(uri, null)
+        }
+
         Log.d(TAG, "Existing update, returning $count")
         return count
     }
@@ -247,6 +259,12 @@ class AppProvider: ContentProvider() {
             }
 
             else -> throw IllegalArgumentException("Unknown uri: ${uri}")
+        }
+
+        if(count > 0){
+            // something was inserted
+            Log.d(TAG,"delete: Setting notifyChange with $uri")
+            context?.contentResolver?.notifyChange(uri, null)
         }
 
         Log.d(TAG, "Existing delete, returning $count")
