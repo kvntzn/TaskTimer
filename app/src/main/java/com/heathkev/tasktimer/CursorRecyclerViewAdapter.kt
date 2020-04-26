@@ -55,8 +55,6 @@ class CursorRecyclerViewAdapter(private var cursor: Cursor?, private val listene
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        Log.d(TAG,"onBindViewHolder: starts")
-
         val cursor = cursor // avoid problems with smart cast
         if(cursor == null || cursor.count == 0){
             Log.d(TAG,"onBindViewHolder: providing instructions")
@@ -83,14 +81,12 @@ class CursorRecyclerViewAdapter(private var cursor: Cursor?, private val listene
     }
 
     override fun getItemCount(): Int {
-        Log.d(TAG,"getItemCount: starts")
         val cursor = cursor
         val count = if(cursor == null || cursor.count == 0){
             1   // fib, because we populate a single ViewHolder with instructions
         }else {
             cursor.count
         }
-        Log.d(TAG,"returning $count")
         return count
     }
 

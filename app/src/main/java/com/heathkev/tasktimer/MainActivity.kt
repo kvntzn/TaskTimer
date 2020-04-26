@@ -1,20 +1,20 @@
 package com.heathkev.tasktimer
 
-import android.content.ContentValues
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
 private const val TAG =  "MainActivity"
-class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked {
+class MainActivity : AppCompatActivity()
+    , AddEditFragment.OnSaveClicked
+    , MainActivityFragment.OnTaskEdit {
 
     // Whether or not the activity is 2-pane mode
     // i.e. running in landscape, or on a tablet
@@ -61,6 +61,10 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked {
         mainFragment.view?.visibility = View.VISIBLE
 
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
+    }
+
+    override fun onTaskEdit(task: Task) {
+        taskEditRequest(task)
     }
 
     override fun onSaveClicked() {

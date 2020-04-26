@@ -1,24 +1,41 @@
 package com.heathkev.tasktimer
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_main.*
+import java.lang.RuntimeException
 
 /**
  * A simple [Fragment] subclass.
  */
 private const val TAG = "MainActivityFragment"
-class MainActivityFragment : Fragment(), CursorRecyclerViewAdapter.OnTaskClickListener {
+class MainActivityFragment : Fragment(),
+    CursorRecyclerViewAdapter.OnTaskClickListener {
 
-    private val viewModel:TaskTimerViewModel by viewModels()
+    private val viewModel:TaskTimerViewModel by activityViewModels()
     private val mAdapter = CursorRecyclerViewAdapter(null, this)
+
+    interface OnTaskEdit{
+        fun onTaskEdit(task: Task)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        if(context !is OnTaskEdit){
+            throw RuntimeException("${context.toString()} must implement OnTaskEdit")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,11 +60,11 @@ class MainActivityFragment : Fragment(), CursorRecyclerViewAdapter.OnTaskClickLi
     }
 
     override fun onEditClick(task: Task) {
-        TODO("Not yet implemented")
+        (activity as OnTaskEdit?)?.onTaskEdit(task)
     }
 
     override fun onDeleteClick(task: Task) {
-        TODO("Not yet implemented")
+        viewModel.deleteTask(task.id)
     }
 
     override fun onTaskLongClick(task: Task) {
